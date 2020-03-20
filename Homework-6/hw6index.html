@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <title>What's The Weather?</title>
+    
+    <style>
+    input[type=text] {
+        padding: 5px;
+        font-size: 17px;
+        border: 1px solid grey;
+        float: left;
+        width: 80%;
+        background: #f1f1f1;
+    }
+    .card-table{
+        background-color:white;
+        margin: auto;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        text-align: left;
+    }
+
+    #display {
+        display:inline-block;
+    }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-dark">
+        <span class="navbar-brand mb-0 h1 text-light">Weather Dashboard</span>
+      </nav>
+
+
+      <div class="container float-left" id="search">
+          
+      <div class="row">
+        <div class="card bg-light text-center" style="width: 20rem;">
+
+            <div class="card-header">
+              <h3> Search For a City: </h3>
+              <input type="text" placeholder="ex. New York" name="search" id="city-input"><button type="submit" class="btn btn-primary" id="city-search"><i class="fa fa-search"></i></button>
+                <br>
+            </div>
+      
+            <div class="row">
+            <table class="card-table table table-bordered" style="width:18rem;">
+              <tbody>
+                <tr>
+                  <td>Austin</td>
+                </tr>
+                <tr>
+                  <td>Chicago</td>
+                </tr>
+                <tr>
+                    <td>New York</td>
+                </tr>
+                <tr>
+                    <td>Orlando</td>
+                </tr>
+                <tr>
+                    <td>San Francisco</td>
+                </tr>
+                <tr>
+                    <td>Seattle</td>
+                </tr>
+                <tr>
+                    <td>Denver</td>
+                </tr>
+                <tr>
+                    <td>Atlanta</td>
+                </tr>
+                </tbody>
+            </table>
+            </div>  
+        </div>
+        </div>
+        
+    </div>
+
+<div class="container">
+    <div class="container mt-3" style="display:none;" id="display">
+        <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title" id="city"></h3>
+                <br>
+                <h5 class="card-subtitle mb-2" id="temp"></h5>
+                <br>
+                <h5 class="card-subtitle mb-2" id="hum"></h5>
+                <br>
+                <h5 class="card-subtitle mb-2" id="wind"></h5>
+                <br>
+                <h5 class="card-subtitle mb-2" id="uv"></h5>
+              </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container mt-5 mb-5" style="display:none;" id="forecast">
+        <div class="row"><h3>5 Day Forecast</h3></div>
+        <div class="row">
+
+            <table class="table table-bordered bg-primary" id="5day">
+                <thead class="text-white">
+                  <tr>
+                    <th scope="col">Day 1</th>
+                    <th scope="col">Day 2</th>
+                    <th scope="col">Day 3</th>
+                    <th scope="col">Day 4</th>
+                    <th scope="col">Day 5</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <td id="day1"></td>
+                    <td id="day2"></td>
+                    <td id="day3"></td>
+                    <td id="day4"></td>
+                    <td id="day5"></td>
+                </tbody>
+            </table>
+       
+        </div>
+        </div>
+    </div>  
+</div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+$("#city-search").on("click", function(event) {
+    event.preventDefault();
+    
+    var APIKey ="596f0813e21627e188f4220cdf3f5742"
+    var city = $("#city-input").val();
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&APPID=596f0813e21627e188f4220cdf3f5742"
+
+    $.ajax({
+        url: queryURL,
+        method: "GET",
+    }).then(function(response){
+
+        $("#forecast").show();
+        $("#display").show();
+
+        $("#day1").append("Date: " + response.list[0].dt_txt + "Temp: " + response.list[0].main.temp + " \xB0F" + "Humidity: " + JSON.stringify(response.list[0].main.humidity) + "%")
+        $("#day2").append("Date: " + response.list[6].dt_txt + "Temp: " + response.list[6].main.temp + " \xB0F" + "Humidity: " + JSON.stringify(response.list[6].main.humidity) + "%")
+        $("#day3").append("Date: " + response.list[14].dt_txt + "Temp: " + response.list[14].main.temp + " \xB0F" + "Humidity: " + JSON.stringify(response.list[14].main.humidity) + "%")
+        $("#day4").append("Date: " + response.list[22].dt_txt + "Temp: " + response.list[22].main.temp + " \xB0F" + "Humidity: " + JSON.stringify(response.list[22].main.humidity) + "%")
+        $("#day5").append("Date: " + response.list[30].dt_txt + "Temp: " + response.list[30].main.temp + " \xB0F" + "Humidity: " + JSON.stringify(response.list[30].main.humidity) + "%")
+
+        $("#city").append(" " + response.city.name)
+        $("#hum").append("Humidity: " + JSON.stringify(response.list[0].main.humidity) + "%")
+        $("#temp").append("Temp: " + response.list[0].main.temp + " \xB0F")
+        $("#wind").append("Wind: " + response.list[0].wind.speed + " MPH") 
+    })
+})
+
+
+
+</script>
+
+</body>
+</html>
